@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seller Dashboard</title>
+
+    <!-- Attention, ici l'ordre des fichiers css est important. Malgrés qu'il n'y est pas
+        de textarea dans le fichier signup.css, l'auteur à déclaré leurs styles en même 
+        temps que les inputs, puisqu'ils doivent avoir à peu prêt la même apparence (voir "signup.css" ligne 35).
+        Donc le style de "signup.css" s'applique en premier puis "seller.css" permet de faire les ajustements
+        principalement sur leurs tailles.
+        Idem pour la classe "submit-btn". 
+         -->
+    <link rel="stylesheet" href="css/signup.css" />
+    <link rel="stylesheet" href="css/seller.css" />
+  </head>
+  <body>
+    <img src="img/loader.gif" class="loader" alt="" />
+
+    <div class="alert-box">
+      <img src="img/error.png" class="alert-img" alt="" />
+      <p class="alert-msg">Error message</p>
+    </div>
+
+    <img src="img/dark-logo.png" alt="" class="logo" />
+
+    <!-- Become seller element -->
+    <div class="become-seller hide">
+      <p class="heading">become a seller</p>
+      <p class="des">
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sapiente necessitatibus sed qui
+        hic, neque culpa quasi beatae, ut voluptate quibusdam quaerat, nam perspiciatis asperiores
+        maxime iste aliquid non eligendi quos.Lorem ipsum dolor sit amet consectetur, adipisicing
+        elit. Sapiente necessitatibus sed qui hic, neque culpa quasi beatae, ut voluptate quibusdam
+        quaerat, nam perspiciatis asperiores maxime iste aliquid non eligendi quos.Lorem ipsum dolor
+        sit amet consectetur, adipisicing elit. Sapiente necessitatibus sed qui hic, neque culpa
+        quasi beatae, ut voluptate quibusdam quaerat, nam perspiciatis asperiores maxime iste
+        aliquid non eligendi quos.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sapiente
+        necessitatibus sed qui hic, neque culpa quasi beatae, ut voluptate quibusdam quaerat, nam
+        perspiciatis asperiores maxime iste aliquid non eligendi quos.Lorem ipsum dolor sit amet
+        consectetur, adipisicing elit. Sapiente necessitatibus sed qui hic, neque culpa quasi
+        beatae, ut voluptate quibusdam quaerat, nam perspiciatis asperiores maxime iste aliquid non
+        eligendi quos.
+      </p>
+      <button class="btn" id="apply-btn">apply for seller account</button>
+    </div>
+
+    <!-- Aplly form -->
+    <div class="apply-form hide">
+      <input
+        type="text"
+        id="business-name"
+        placeholder="business name / company name / shop name"
+      />
+      <textarea id="business-add" placeholder="address"></textarea>
+      <textarea id="about" placeholder="about"></textarea>
+      <input type="text" id="number" placeholder="number" />
+      <input type="checkbox" checked class="checkbox" id="terms-and-cond" />
+      <label for="terms-and-cond">agree to our <a href=""> terms and conditions</a></label>
+      <br />
+      <input type="checkbox" checked class="checkbox" id="legitInfo" />
+      <label for="legitInfo">all information is legit</label>
+      <button class="submit-btn" id="apply-form-btn">apply</button>
+    </div>
+
+    <!-- Product list -->
+    <div class="product-listing hide">
+      <div class="add-product">
+        <p class="add-product-title">add product</p>
+        <buton class="btn">add product</buton>
+      </div>
+    </div>
+    <img src="img/no-products.png" alt="" class="no-product-image" />
+
+    <script src="js/token.js"></script>
+    <script src="js/seller.js"></script>
+  </body>
+</html>
