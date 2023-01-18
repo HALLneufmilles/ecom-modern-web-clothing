@@ -29,8 +29,7 @@ const accessKeyId = process.env.AWS_ACCESS_KEY;
 const secretAccessKey = process.env.AWS_SECRET_KEY;
 
 // On s'identifie à AWS
-aws.config.update({
-  region,
+aws.config.update({ region,
   accessKeyId,
   secretAccessKey
 });
