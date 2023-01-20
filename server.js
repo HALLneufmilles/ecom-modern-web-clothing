@@ -29,10 +29,7 @@ const accessKeyId = process.env.AWS_ACCESS_KEY;
 const secretAccessKey = process.env.AWS_SECRET_KEY;
 
 // On s'identifie à AWS
-aws.config.update({ region,
-  accessKeyId,
-  secretAccessKey
-});
+aws.config.update({ region, accessKeyId, secretAccessKey });
 
 // On initie la base de donnée s3 de AWS. Comme on le fait en ligne 15 (let db = admin.firestore()).
 const s3 = new aws.S3(); // s'est une des fonction fourni par le SDK de AWS.
@@ -45,13 +42,19 @@ async function generateUrl() {
 
   const imageName = `${id}${date.getTime()}.jpg`;
 
-  const params = ({
+  const params = {
     Bucket: bucketName,
     Key: imageName,
     Expires: 300, //300 ms
     ContentType: "image/jpeg",
-  });
+  };
+  // ATTENTION il faudrait mettre un try /catch. Voir :https://stackoverflow.com/questions/69532165/how-to-upload-files-to-aws-s3-i-get-an-error-when-doing-it-using-private-buck
   const uploadUrl = await s3.getSignedUrlPromise("putObject", params);
+  //  la méthode "getSignedUrlPromise" de l'objet S3 va servir à générer une URL signée
+  // pour mettre un objet ("putObject") avec les paramètres spécifiés (dans la variable "params").
+  // Cette adresse est comme une place dédiée par aws pour ranger le fichier, que l'on va
+  // utiliser dans la requete fetch(url,...) du fichier addProduct.js
+
   return uploadUrl;
 }
 
@@ -215,9 +218,75 @@ app.post("/seller", (req, res) => {
   }
 });
 
-// sur la requete '/s3url' générer une url et nous la retourner
+// sur la requete '/s3url' générer une url AWS et nous la retourner
 app.get("/s3url", (req, res) => {
   generateUrl().then((url) => res.json(url));
+});
+
+// Ajouter les produits du vendeur
+app.post("/add-product", (req, res) => {
+  let { name, shortDes, des, images, sizes, actualPrice, discount, sellPrice, stock, tags, tac, email, draft, id } = req.body;
+  // validation
+
+  if (!name.length) {
+    return res.json({ alert: "enter product name" });
+  } else if (shortDes.length > 100 || shortDes.length < 10) {
+    return res.json({ alert: "short description must be between 10 to 100 letters long" });
+  } else if (!des.length) {
+    return res.json({ alert: "enter detail description about the product" });
+  } else if (!images.length) {
+    // image link array
+    return res.json({ alert: "upload atleast one product image" });
+  } else if (!sizes.length) {
+    // size array
+    return res.json({ alert: "select at least one size" });
+  } else if (!actualPrice.length || !discount.length || !sellPrice.length) {
+    return res.json({ alert: "you must add pricings" });
+  } else if (stock < 20) {
+    return res.json({ alert: "you should have at least 20 items in stock" });
+  } else if (!tags.length) {
+    return res.json({ alert: "enter few tags to help ranking your product in search" });
+  } else if (!tac) {
+    return res.json({ alert: "you must agree to our terms and conditions" });
+  }
+
+  // Ajout des produits du vendeur dans la base de données
+  let docName = `${name.toLowerCase()}-${Math.floor(Math.random() * 5000)}`;
+  db.collection("products") // On accède à la collection 'products' de Firebase.
+    .doc(docName) // On accède à le sous ensemble doc dans laquelle on met 'docName'
+    .set(req.body) // On met dans le sous ensemble Data, les données passées dans 'req-body'.
+    .then((data) => {
+      res.json({ product: name }); // On demande au server de nous retourner cette objet en réponse.
+    })
+    .catch((err) => {
+      // si ça n'a pas pu se faire, on retourne une erreur.
+      return res.json({ alert: "some error occured. Try again." });
+    });
+  // ensuite on va dans Firebase / firestore Database. On crée la collection 'products',
+  // ... voir Part3 1h10mn
+});
+
+// aller chercher les produit du seller pour les afficher dans la page seller.
+app.post("/get-products", (req, res) => {
+  let { email } = req.body;
+  let docRef = db.collection("products").where("email", "==", email); // on recupère le document correspondant à l'email
+
+  docRef
+    .get() // On récupère les données du document
+    .then((products) => {
+      if (products.empty) {
+        // si pas de produit
+        return res.json("no product");
+      }
+      let productArr = [];
+      products.forEach((item) => {
+        let data = item.data(); // On met les datas de chaque produit dans une variable data
+        data.id = item.id; // Pour firebase l'id du produit(item) est le nom du document. Nous lui avons transmit le nom du document à en ligne 254 (let docName = `${n....  )
+        // Comme cet id n'est pas compris dans les datas, on le rajoute.
+        productArr.push(data); // On envoi les datas de chaque item dans le tableau des produits.
+      });
+      res.json(productArr); // Enfin on demande au server de nous retourner 'productArr' comme data.
+    });
 });
 
 // 404 route:

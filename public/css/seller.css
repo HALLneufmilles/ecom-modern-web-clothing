@@ -6,7 +6,7 @@
 body {
   width: 100%;
   display: block;
-  min-height: auto;
+  min-height: 90vh;
   padding: 0 5vw;
   position: relative;
   font-family: roboto, sans-serif;
@@ -97,4 +97,55 @@ textarea {
 .no-product-image {
   display: block;
   margin: auto;
+}
+
+.hide {
+  display: none;
+}
+
+.product-container {
+  padding: 0;
+}
+
+.tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 2px 10px;
+  border-radius: 2px;
+  background-color: #fff;
+  color: #383838;
+}
+
+.product-card:hover .card-action-btn {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.card-action-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  outline: none;
+  background-color: #fff;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.card-action-btn img {
+  height: 18px;
+}
+
+.open-btn {
+  top: 60px;
+}
+
+.delete-popup-btn {
+  top: 110px;
+  background-color: #f25252;
 }

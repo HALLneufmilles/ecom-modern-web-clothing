@@ -30,6 +30,14 @@
         <!-- upload inputs -->
         <p class="text"><img src="img/camera.png" alt="" />upload image</p>
         <div class="upload-catalogue">
+          <!--  Le <input type="file">définit un champ de sélection de fichier et un 
+            bouton "Parcourir" pour les téléchargements de fichiers.
+           Pour définir un champ de sélection de fichiers qui permet de sélectionner plusieurs 
+           fichiers, ajoutez l' multipleattribut.-->
+          <!-- L'astuce utilisée ici est que INPUT est caché et qu'on utilise le label mis en forme 
+            avec la classe "upload-image" pour charger le fichier.
+            Aparemment il y à une autre méthode avec 'fileReader', à Voir: 
+            https://webdevpro.net/html-js-afficher-une-image-miniature-suite-a-lutilisation-dun-input-typefile/-->
           <input type="file" class="fileupload" id="first-file-upload-btn" hidden />
           <label for="first-file-upload-btn" class="upload-image"></label>
           <input type="file" class="fileupload" id="second-file-upload-btn" hidden />

@@ -1,4 +1,5 @@
 let loader = document.querySelector(".loader");
+let user = JSON.parse(sessionStorage.user || null);
 
 // section become seller
 const becomeSellerElement = document.querySelector(".become-seller");
@@ -13,13 +14,15 @@ window.onload = () => {
   // alors on lui donne accès à la page 'seller.html',
   // si pas d'utilisateur connecté ou mauvais Token
   // on le redirige vers la page 'login.html'.
-  if (sessionStorage.user) {
-    let user = JSON.parse(sessionStorage.user);
+  if (user) {
+    //let user = JSON.parse(sessionStorage.user); part3 1h20mn19: déplacé en ligne 2
     if (compareToken(user.authToken, user.email)) {
       if (!user.seller) {
         becomeSellerElement.classList.remove("hide");
       } else {
-        productListingElement.classList.remove("hide");
+        //productListingElement.classList.remove("hide"); part3 1h19mn14 : commenté + ajout de ligne en-dessous
+        loader.style.display = "block";
+        setupProducts(); // On va chercher les produits dans la bd firebase. Firebase contient les liens sécurisés AWS vers les images.
       }
     } else {
       location.replace("/login");
@@ -44,12 +47,7 @@ const tac = document.querySelector("#terms-and-cond");
 const legitInfo = document.querySelector("#legitInfo");
 
 applyFormButton.addEventListener("click", () => {
-  if (
-    !businessName.value.length ||
-    !address.value.length ||
-    !about.value.length ||
-    !number.value.length
-  ) {
+  if (!businessName.value.length || !address.value.length || !about.value.length || !number.value.length) {
     showAlert("fill all the inputs");
   } else if (!tac.checked || !legitInfo.checked) {
     showAlert("you must agree to our terms and conditions");
@@ -67,3 +65,15 @@ applyFormButton.addEventListener("click", () => {
     });
   }
 });
+
+const setupProducts = () => {
+  // envoie une requete 'post'(parcequ'on envoie l'adresse email au server) au server.
+  // le server va utiliser la route post /get-products pour savoir quoi faire.
+  fetch("/get-products", {
+    method: "post",
+    headers: new Headers({ "Content-type": "application/json" }),
+    body: JSON.stringify({ email: user.email }),
+  })
+    .then((res) => res.json())
+    .then((data) => console.log(data));
+};

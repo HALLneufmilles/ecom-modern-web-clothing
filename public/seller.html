@@ -13,6 +13,8 @@
         principalement sur leurs tailles.
         Idem pour la classe "submit-btn". 
          -->
+    <link rel="stylesheet" href="css/home.css" />
+    <link rel="stylesheet" href="css/search.css" />
     <link rel="stylesheet" href="css/signup.css" />
     <link rel="stylesheet" href="css/seller.css" />
   </head>
@@ -29,31 +31,13 @@
     <!-- Become seller element -->
     <div class="become-seller hide">
       <p class="heading">become a seller</p>
-      <p class="des">
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sapiente necessitatibus sed qui
-        hic, neque culpa quasi beatae, ut voluptate quibusdam quaerat, nam perspiciatis asperiores
-        maxime iste aliquid non eligendi quos.Lorem ipsum dolor sit amet consectetur, adipisicing
-        elit. Sapiente necessitatibus sed qui hic, neque culpa quasi beatae, ut voluptate quibusdam
-        quaerat, nam perspiciatis asperiores maxime iste aliquid non eligendi quos.Lorem ipsum dolor
-        sit amet consectetur, adipisicing elit. Sapiente necessitatibus sed qui hic, neque culpa
-        quasi beatae, ut voluptate quibusdam quaerat, nam perspiciatis asperiores maxime iste
-        aliquid non eligendi quos.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sapiente
-        necessitatibus sed qui hic, neque culpa quasi beatae, ut voluptate quibusdam quaerat, nam
-        perspiciatis asperiores maxime iste aliquid non eligendi quos.Lorem ipsum dolor sit amet
-        consectetur, adipisicing elit. Sapiente necessitatibus sed qui hic, neque culpa quasi
-        beatae, ut voluptate quibusdam quaerat, nam perspiciatis asperiores maxime iste aliquid non
-        eligendi quos.
-      </p>
+      <p class="des">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sapiente necessitatibus sed qui hic, neque culpa quasi beatae, ut voluptate quibusdam quaerat, nam perspiciatis asperiores maxime iste aliquid non eligendi quos.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sapiente necessitatibus sed qui hic, neque culpa quasi beatae, ut voluptate quibusdam quaerat, nam perspiciatis asperiores maxime iste aliquid non eligendi quos.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sapiente necessitatibus sed qui hic, neque culpa quasi beatae, ut voluptate quibusdam quaerat, nam perspiciatis asperiores maxime iste aliquid non eligendi quos.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sapiente necessitatibus sed qui hic, neque culpa quasi beatae, ut voluptate quibusdam quaerat, nam perspiciatis asperiores maxime iste aliquid non eligendi quos.Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sapiente necessitatibus sed qui hic, neque culpa quasi beatae, ut voluptate quibusdam quaerat, nam perspiciatis asperiores maxime iste aliquid non eligendi quos.</p>
       <button class="btn" id="apply-btn">apply for seller account</button>
     </div>
 
     <!-- Aplly form -->
     <div class="apply-form hide">
-      <input
-        type="text"
-        id="business-name"
-        placeholder="business name / company name / shop name"
-      />
+      <input type="text" id="business-name" placeholder="business name / company name / shop name" />
       <textarea id="business-add" placeholder="address"></textarea>
       <textarea id="about" placeholder="about"></textarea>
       <input type="text" id="number" placeholder="number" />
@@ -69,11 +53,28 @@
     <div class="product-listing hide">
       <div class="add-product">
         <p class="add-product-title">add product</p>
-        <buton class="btn">add product</buton>
+        <buton class="btn" onclick="location.href = `/add-product`">add product</buton>
       </div>
     </div>
-    <img src="img/no-products.png" alt="" class="no-product-image" />
+    <img src="img/no-products.png" alt="" class="no-product-image hide" />
 
+    <!-- cards   Part3: 1h14mn20 -->
+    <div class="product-container">
+      <div class="product-card">
+        <div class="product-image">
+          <span class="tag">Draft</span>
+          <img src="img/card1.png" class="product-thumb" alt="" />
+          <button class="card-action-btn edit-btn"><img src="img/edit.png" alt="" /></button>
+          <button class="card-action-btn open-btn"><img src="img/open.png" alt="" /></button>
+          <button class="card-action-btn delete-popup-btn"><img src="img/delete.png" alt="" /></button>
+        </div>
+        <div class="product-info">
+          <h2 class="product-brand">brand</h2>
+          <p class="product-short-des">a short line about the cloth..</p>
+          <span class="price">$20</span><span class="actual-price">$40</span>
+        </div>
+      </div>
+    </div>
     <script src="js/token.js"></script>
     <script src="js/seller.js"></script>
   </body>

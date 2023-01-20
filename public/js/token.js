@@ -59,8 +59,12 @@ const processData = (data) => {
   // donc data.alert fait référence à cette objet.
   loader.style.display = null; // supprime le gift loader
   if (data.alert) {
+    // Si le server nous retourne une erreur ...
+
     showAlert(data.alert); // data.alert est donc le msg.
   } else if (data.name) {
+    // Si le server nous retourne un name ...
+
     // si il y à un data.name s'est qu'il n'y avait pas d'erreur.
     //console.log(data);
     // Nous servait de console.log au début du tuto pour afficher les données afin de
@@ -80,9 +84,11 @@ const processData = (data) => {
 
     //On redirige l'utilisateur vers la page d'acceuil
     location.replace("/");
-  } else if ((data = true)) {
+  } else if (data == true) {
+    // Si le server nous retourne un 'true'
+
     // cela veut dire que s'est la réponse à la requête POST /seller et
-    // que le status seller de l'utilisateur a été modifié à 'true'.
+    // que l'utilisateur s'est increit en tant que seller.
 
     // Donc on met à jour le status 'seller' de l'utilisateur dans sessionStorage.
     // pour ça on commence par récupérer les données contenies dans sessionStorage.
@@ -93,6 +99,8 @@ const processData = (data) => {
     sessionStorage.user = JSON.stringify(user); // On renvoi les donnée user modifiées et stringifiées
     // dans sessionStorage.
     location.reload(); // on recharge la page seller.
+  } else if (data.product) {
+    location.href = "/seller";
   }
 };
 
@@ -105,4 +113,5 @@ const showAlert = (msg) => {
   setTimeout(() => {
     alertBox.classList.remove("show");
   }, 2000);
+  return false;
 };
