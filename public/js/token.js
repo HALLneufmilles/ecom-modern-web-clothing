@@ -63,11 +63,12 @@ const processData = (data) => {
 
     showAlert(data.alert); // data.alert est donc le msg.
   } else if (data.name) {
-    // Si le server nous retourne un name ...
+    // Si le server nous retourne un name alos:
+    //    - soit il vient de s'inscrire (signup), le server à exécuté la route POST '/signup'.
+    //    - soit il vient de s'identifier (login), le server à exécuté la route POST '/login'.
 
     // si il y à un data.name s'est qu'il n'y avait pas d'erreur.
-    //console.log(data);
-    // Nous servait de console.log au début du tuto pour afficher les données afin de
+    //console.log(data); // Nous servait de console.log au début du tuto pour afficher les données afin de
     // s'assurer qu'on recevait bien les données.
 
     // maintenant on crée un Token pour le client afin qu'il puisse etre
@@ -83,9 +84,9 @@ const processData = (data) => {
     sessionStorage.user = JSON.stringify(data);
 
     //On redirige l'utilisateur vers la page d'acceuil
-    location.replace("/");
+    location.replace("/"); // On le renvoi à la page Home.
   } else if (data == true) {
-    // Si le server nous retourne un 'true'
+    // Si le server nous retourne un 'true', cela veut dire qu'un utilisateur s'est inscrit comme vendeur (seller) et que le sever à executé la route POST '/seller'.
 
     // cela veut dire que s'est la réponse à la requête POST /seller et
     // que l'utilisateur s'est increit en tant que seller.
@@ -98,9 +99,10 @@ const processData = (data) => {
     user.seller = true; // user est maintenant modifié
     sessionStorage.user = JSON.stringify(user); // On renvoi les donnée user modifiées et stringifiées
     // dans sessionStorage.
-    location.reload(); // on recharge la page seller.
+    location.reload(); // on recharge la page seller. apparait uniquement la barre 'add product' sans produit.
   } else if (data.product) {
-    location.href = "/seller";
+    // si le server nous retourne 'product' alors cela veut dire qu'un vendeur vient d'ajouter un produit sur la page 'addProduct.html' et que le sever à exécuter la route POST '/add-product'.
+    location.href = "/seller"; // dans ce cas on le renvoie a la page seller pour lui afficher tous ses produits.
   }
 };
 

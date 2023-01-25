@@ -1,3 +1,5 @@
+// Form.js fonctionne à la fois pour signup et login
+
 // redirect to home page if user logged in
 // window.onload attend que la page et toutes ses ressources soient chargés.
 window.onload = () => {

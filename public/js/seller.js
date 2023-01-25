@@ -1,12 +1,13 @@
 let loader = document.querySelector(".loader");
 let user = JSON.parse(sessionStorage.user || null);
 
-// section become seller
+// section sur la description du role de vendeur
 const becomeSellerElement = document.querySelector(".become-seller");
+// bouton pour faire apparaitre le formulaire de candidature au role de vendeur
 const showApplyFormBtn = document.querySelector("#apply-btn"); // bouton pour afficher le formulaire
-// section apply form
+// formulaire de cadidature au role de vendeur
 const applyForm = document.querySelector(".apply-form");
-// product listing
+// list des produits ajoutés par le vendeur
 const productListingElement = document.querySelector(".product-listing");
 
 window.onload = () => {
@@ -32,12 +33,13 @@ window.onload = () => {
   }
 };
 
+// une un click du bouton pour faire apparaitre le formulaire de candidature au role de vendeur
 showApplyFormBtn.addEventListener("click", () => {
-  becomeSellerElement.classList.add("hide");
-  applyForm.classList.remove("hide");
+  becomeSellerElement.classList.add("hide"); // On fait disparaitre le section sur la description du role de vendeur
+  applyForm.classList.remove("hide"); // On affiche le formulaire de cadidature au role de vendeur
 });
 
-// form submission
+// On accède aux champs du formulaire de cadidature au role de vendeur
 const applyFormButton = document.querySelector("#apply-form-btn");
 const businessName = document.querySelector("#business-name");
 const address = document.querySelector("#business-add");
@@ -46,6 +48,7 @@ const number = document.querySelector("#number");
 const tac = document.querySelector("#terms-and-cond");
 const legitInfo = document.querySelector("#legitInfo");
 
+// Sur un click du bouton de validation du formulaire de cadidature au role de vendeur
 applyFormButton.addEventListener("click", () => {
   if (!businessName.value.length || !address.value.length || !about.value.length || !number.value.length) {
     showAlert("fill all the inputs");
@@ -68,12 +71,26 @@ applyFormButton.addEventListener("click", () => {
 
 const setupProducts = () => {
   // envoie une requete 'post'(parcequ'on envoie l'adresse email au server) au server.
-  // le server va utiliser la route post /get-products pour savoir quoi faire.
+  // le server va utiliser la route post /get-products aller chercher dans la base de données de Firebase, tous les produits relatif à l'email.
+  // le server retournera soit un 'no-product' soit un tableau de produits (productArr) voir server.js ligne 285.
   fetch("/get-products", {
     method: "post",
     headers: new Headers({ "Content-type": "application/json" }),
     body: JSON.stringify({ email: user.email }),
   })
     .then((res) => res.json())
-    .then((data) => console.log(data));
+    .then((data) => {
+      // part3 1h25mn
+      loader.style.display = null;
+      productListingElement.classList.remove("hide");
+
+      if (data == "no product") {
+        let emptySvg = document.querySelector(".no-product-image");
+        emptySvg.classList.remove("hide");
+      } else {
+        data.forEach((product) => {
+          createProduct(product); // --> part3 1h25mn : integration à seller.html
+        });
+      }
+    });
 };

@@ -60,7 +60,7 @@ async function generateUrl() {
 
 // On crée le chemin A des fichiers statics , Donc staticPath = public
 let staticPath = path.join(__dirname, "public");
-
+console.log(staticPath);
 // on intègre toutes les fonctionalités d'express dans notre app
 const app = express();
 
@@ -142,6 +142,15 @@ app.post("/signup", (req, res) => {
 app.get("/add-product", (req, res) => {
   res.sendFile(path.join(staticPath, "addProduct.html"));
 });
+
+// part3 1h45mn04:
+app.get("/add-product/:id", (req, res) => {
+  // Ici pas de fetch reliée à cette route puisqu'on a rien a poster ni rien à traiter en retour, just besoin de la page. S'est le navigateur qui fait la requete tout seul.
+  // Le symbole ":" dans cette route indique qu'il s'agit d'un paramètre variable dans l'URL.
+  // Lorsque cette route est appelée avec une valeur spécifique pour "id", cette valeur sera
+  // disponible dans l'objet "req" sous "req.params.id".
+  res.sendFile(path.join(staticPath, "addProduct.html"));
+}); // part3 1h45mn29 : On va sur addProduct.html.
 
 //login route
 // Pour que le server puisse aller chercher la page login et l'envoyer au client.
@@ -228,33 +237,38 @@ app.post("/add-product", (req, res) => {
   let { name, shortDes, des, images, sizes, actualPrice, discount, sellPrice, stock, tags, tac, email, draft, id } = req.body;
   // validation
 
-  if (!name.length) {
-    return res.json({ alert: "enter product name" });
-  } else if (shortDes.length > 100 || shortDes.length < 10) {
-    return res.json({ alert: "short description must be between 10 to 100 letters long" });
-  } else if (!des.length) {
-    return res.json({ alert: "enter detail description about the product" });
-  } else if (!images.length) {
-    // image link array
-    return res.json({ alert: "upload atleast one product image" });
-  } else if (!sizes.length) {
-    // size array
-    return res.json({ alert: "select at least one size" });
-  } else if (!actualPrice.length || !discount.length || !sellPrice.length) {
-    return res.json({ alert: "you must add pricings" });
-  } else if (stock < 20) {
-    return res.json({ alert: "you should have at least 20 items in stock" });
-  } else if (!tags.length) {
-    return res.json({ alert: "enter few tags to help ranking your product in search" });
-  } else if (!tac) {
-    return res.json({ alert: "you must agree to our terms and conditions" });
+  if (!draft) {
+    // part3 1h41mn35: Ajout de la condition 'if(!draft)'. Ensuite on retourne sur createProduct.js pour gérer l'image du produit
+    // dans le cas où un draft n'aurait pas d'image. Sinon c'est moche.
+    //part3 1h42mn50 ...
+    if (!name.length) {
+      return res.json({ alert: "enter product name" });
+    } else if (shortDes.length > 100 || shortDes.length < 10) {
+      return res.json({ alert: "short description must be between 10 to 100 letters long" });
+    } else if (!des.length) {
+      return res.json({ alert: "enter detail description about the product" });
+    } else if (!images.length) {
+      // image link array
+      return res.json({ alert: "upload atleast one product image" });
+    } else if (!sizes.length) {
+      // size array
+      return res.json({ alert: "select at least one size" });
+    } else if (!actualPrice.length || !discount.length || !sellPrice.length) {
+      return res.json({ alert: "you must add pricings" });
+    } else if (stock < 20) {
+      return res.json({ alert: "you should have at least 20 items in stock" });
+    } else if (!tags.length) {
+      return res.json({ alert: "enter few tags to help ranking your product in search" });
+    } else if (!tac) {
+      return res.json({ alert: "you must agree to our terms and conditions" });
+    }
   }
 
   // Ajout des produits du vendeur dans la base de données
-  let docName = `${name.toLowerCase()}-${Math.floor(Math.random() * 5000)}`;
+  let docName = id == undefined ? `${name.toLowerCase()}-${Math.floor(Math.random() * 5000)}` : id;
   db.collection("products") // On accède à la collection 'products' de Firebase.
     .doc(docName) // On accède à le sous ensemble doc dans laquelle on met 'docName'
-    .set(req.body) // On met dans le sous ensemble Data, les données passées dans 'req-body'.
+    .set(req.body) // On met dans le sous ensemble Data, les données transmises par 'req-body'.
     .then((data) => {
       res.json({ product: name }); // On demande au server de nous retourner cette objet en réponse.
     })
@@ -267,27 +281,44 @@ app.post("/add-product", (req, res) => {
 });
 
 // aller chercher les produit du seller pour les afficher dans la page seller.
+// part3 1h50mn40: On récupère Id envoyée par "fetchProductData()" de addProduct.js
 app.post("/get-products", (req, res) => {
-  let { email } = req.body;
-  let docRef = db.collection("products").where("email", "==", email); // on recupère le document correspondant à l'email
+  let { email, id } = req.body;
+  let docRef = id ? db.collection("products").doc(id) : db.collection("products").where("email", "==", email); // on rassemble les produits de la base de données
+  // ayant dans leurs datas cette adresse email.
 
   docRef
-    .get() // On récupère les données du document
+    .get() // On demande à les récupérer.
     .then((products) => {
       if (products.empty) {
         // si pas de produit
         return res.json("no product");
       }
       let productArr = [];
-      products.forEach((item) => {
-        let data = item.data(); // On met les datas de chaque produit dans une variable data
-        data.id = item.id; // Pour firebase l'id du produit(item) est le nom du document. Nous lui avons transmit le nom du document à en ligne 254 (let docName = `${n....  )
-        // Comme cet id n'est pas compris dans les datas, on le rajoute.
-        productArr.push(data); // On envoi les datas de chaque item dans le tableau des produits.
-      });
-      res.json(productArr); // Enfin on demande au server de nous retourner 'productArr' comme data.
+      if (id) {
+        return res.json(products.data()); // data() est une métode de firebase qui permet de récupérer les données d'un document.
+      } else {
+        products.forEach((item) => {
+          let data = item.data(); // On met chaque produit avec leurs data, dans une variable data.
+          data.id = item.id; // Pour firebase l'id du produit(item) est le nom du document. Nous lui avons transmit le nom du document à en ligne 254 (let docName = `${n....  )
+          // Comme cet id n'est pas compris dans les datas, on le rajoute.
+          productArr.push(data); // On envoi les datas de chaque item dans le tableau des produits.
+        });
+        res.json(productArr); // Enfin on demande au server de nous retourner 'productArr' comme data.
+      }
     });
 });
+
+// part3 1h36mn55: On crée la route pour supprimer le produit
+app.post("/delete-product", (req, res) => {
+  let { id } = req.body;
+
+  db.collection("products")
+    .doc(id)
+    .delete()
+    .then((data) => res.json("success"))
+    .catch((err) => res.json("err"));
+}); // part3 1h38mn00: On retourne terminer la requete dans createProduct.js
 
 // 404 route:
 // pour toutes les root commençant par "/404" Exemple: "/404/azeaze/aze" ....
