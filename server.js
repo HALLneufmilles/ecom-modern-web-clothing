@@ -238,7 +238,7 @@ app.post("/add-product", (req, res) => {
   // validation
 
   if (!draft) {
-    // part3 1h41mn35: Ajout de la condition 'if(!draft)'. Ensuite on retourne sur createProduct.js pour gérer l'image du produit
+    // part3 1h41mn35: Ajout de la condition 'if(!draft)'. S'il sagit d'un draft on passe direct en ligne 268 (let docName) Ensuite on retourne sur createProduct.js pour gérer l'image du produit
     // dans le cas où un draft n'aurait pas d'image. Sinon c'est moche.
     //part3 1h42mn50 ...
     if (!name.length) {
@@ -266,7 +266,7 @@ app.post("/add-product", (req, res) => {
 
   // Ajout des produits du vendeur dans la base de données
   let docName = id == undefined ? `${name.toLowerCase()}-${Math.floor(Math.random() * 5000)}` : id;
-  db.collection("products") // On accède à la collection 'products' de Firebase.
+  db.collection("products") // On accède à la collection 'products' de Firebase.'
     .doc(docName) // On accède à le sous ensemble doc dans laquelle on met 'docName'
     .set(req.body) // On met dans le sous ensemble Data, les données transmises par 'req-body'.
     .then((data) => {
@@ -283,10 +283,17 @@ app.post("/add-product", (req, res) => {
 // aller chercher les produit du seller pour les afficher dans la page seller.
 // part3 1h50mn40: On récupère Id envoyée par "fetchProductData()" de addProduct.js
 app.post("/get-products", (req, res) => {
-  let { email, id } = req.body;
-  let docRef = id ? db.collection("products").doc(id) : db.collection("products").where("email", "==", email); // on rassemble les produits de la base de données
+  // part4 : 25mn On ajout tag. Tag est un tableau de mot clef, qu'on va créer dans addProduct.js dans la la fonction productData(). Comme on a 3 cas à gérer(email, id, tag) on ne peut plus gérer avec une ternaire comme ci-dessous, alors on décompose en 3 conditions (if (id) else if(tag) else...)
+  let { email, id, tag } = req.body;
+  // let docRef = id ? db.collection("products").doc(id) : db.collection("products").where("email", "==", email);// on rassemble les produits de la base de données
   // ayant dans leurs datas cette adresse email.
-
+  if (id) {
+    docRef = db.collection("products").doc(id);
+  } else if (tag) {
+    docRef = db.collection("products").where("tags", "array-contains", tag); // voir : https://firebase.google.com/docs/firestore/query-data/queries?hl=fr#query_operators
+  } else {
+    docRef = db.collection("products").where("email", "==", email);
+  }
   docRef
     .get() // On demande à les récupérer.
     .then((products) => {
@@ -296,6 +303,7 @@ app.post("/get-products", (req, res) => {
       }
       let productArr = [];
       if (id) {
+        //console.log("products.data()", products.data());
         return res.json(products.data()); // data() est une métode de firebase qui permet de récupérer les données d'un document.
       } else {
         products.forEach((item) => {
@@ -319,6 +327,11 @@ app.post("/delete-product", (req, res) => {
     .then((data) => res.json("success"))
     .catch((err) => res.json("err"));
 }); // part3 1h38mn00: On retourne terminer la requete dans createProduct.js
+
+// Gat product's page
+app.get("/products/:id", (req, res) => {
+  res.sendFile(path.join(staticPath, "product.html"));
+});
 
 // 404 route:
 // pour toutes les root commençant par "/404" Exemple: "/404/azeaze/aze" ....

@@ -69,10 +69,10 @@ applyFormButton.addEventListener("click", () => {
   }
 });
 
+// envoie une requete 'post'(parcequ'on envoie l'adresse email au server) au server.
+// le server va utiliser la route post /get-products aller chercher dans la base de données de Firebase, tous les produits relatif à l'email.
+// le server retournera soit un 'no-product' soit un tableau de produits (productArr) voir server.js ligne 285.
 const setupProducts = () => {
-  // envoie une requete 'post'(parcequ'on envoie l'adresse email au server) au server.
-  // le server va utiliser la route post /get-products aller chercher dans la base de données de Firebase, tous les produits relatif à l'email.
-  // le server retournera soit un 'no-product' soit un tableau de produits (productArr) voir server.js ligne 285.
   fetch("/get-products", {
     method: "post",
     headers: new Headers({ "Content-type": "application/json" }),
@@ -89,7 +89,7 @@ const setupProducts = () => {
         emptySvg.classList.remove("hide");
       } else {
         data.forEach((product) => {
-          createProduct(product); // --> part3 1h25mn : integration à seller.html
+          createProduct(product); // --> part3 1h25mn : les données sont envoyées à createProduct pour creer les cartes des produits qui s'afficherons dans la page '/seller'
         });
       }
     });

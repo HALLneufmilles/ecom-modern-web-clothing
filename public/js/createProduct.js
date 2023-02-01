@@ -1,16 +1,25 @@
-// createProduct.js crée les cartes produit sur la page '/seller'
+// ****** createProduct.js crée les cartes produit sur la page '/seller' ******
 
+// Part4 5mn30: ******** paritie effacée **************
 // part3 1h43mn50: On déclare openEditor de manière globale. Cette fonction permettra de modifier un article
-let openEditor;
+// let openEditor; // pourquoi la créer à l'exterieur de createProduct() ??????????
+// Part4 5mn30: ******** paritie effacée **************
 
 // part3 1h25mn: ... seller.js
 const createProduct = (data) => {
-  // part3 1h43mn57: On définit openEditor
-  openEditor = () => {
-    // ATTENTION openEditor() est déclenchée par édit-btn !!! non pas open-btn
-    sessionStorage.tempProduct = JSON.stringify(data);
-    location.href = `/add-product/${data.id}`; //On dit au navigateur, va à la page draft du produit posedant cet id.
-  }; // part3 1h45mn04: On va sur server.js créer une route get '/add-product/:id
+  // Part4 5mn30: ******** paritie effacée **************
+  // // les données viennent de setupProducts() du fichier seller.js
+  // // crée les cartes produit sur la page '/seller'
+  // // part3 1h43mn57: On définit openEditor
+  // console.log(data);
+  // openEditor = () => {
+  //   // ATTENTION openEditor() est déclenchée par édit-btn !!! non pas open-btn
+  //   sessionStorage.tempProduct = JSON.stringify(data); // pourquoi pas utiliser data.id ??????????????f
+
+  //   location.href = `/add-product/${data.id}`;
+  //  //On dit au navigateur, va à la page draft du produit posedant cet id.
+  // }; // part3 1h45mn04: On va sur server.js créer une route get '/add-product/:id
+  // Part4 5mn30: ******** paritie effacée **************
 
   //console.log("createProductDAta: ", data);
   let productContainer = document.querySelector(".product-container");
@@ -23,9 +32,8 @@ const createProduct = (data) => {
             <img src="${data.images[0] || "img/no image.png"}" class="product-thumb" alt="" />
 
 <!-- part3 1h43mn30: On active le bouton édite avec la fonction openEditor() qu'on déclare en ligne 3 de manière à se qu'elle soit globale-->
-            <button class="card-action-btn edit-btn" onclick="openEditor()"><img src="img/edit.png" alt="" /></button>
-
-            <button class="card-action-btn open-btn" onclick="location.href = '/${data.id}'"><img src="img/open.png" alt="" /></button>
+            <button class="card-action-btn edit-btn" onclick="location.href = '/add-product/${data.id}'"><img src="img/edit.png" alt="" /></button>
+            <button class="card-action-btn open-btn" onclick="location.href = '/products/${data.id}'"><img src="img/open.png" alt="" /></button>
 <!--  part3 1h33mn29:  On active le bouton delete avec onclick() -->
             <button class="card-action-btn delete-popup-btn" onclick="openDeletePopup('${data.id}')"><img src="img/delete.png" alt="" /></button>
         </div>
@@ -36,10 +44,11 @@ const createProduct = (data) => {
         </div>
     </div> 
     `;
-  console.log(data.id);
+  // console.log(data.id);
 }; // part3 1h28mn29: on va sur seller.html pour commencer le 'delete alert'
 
 // part3 1h33mn56:
+// gère l'ouverture / fermeture le la popup de suppression d'un article sur la page seller.html
 const openDeletePopup = (id) => {
   let deleteAlert = document.querySelector(".delete-alert");
   deleteAlert.style.display = "flex";

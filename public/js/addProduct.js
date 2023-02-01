@@ -41,7 +41,7 @@ sellingPrice.addEventListener("input", () => {
 
 // charger une image dans le catalogue
 let uploadImages = document.querySelectorAll(".fileupload");
-//console.log(uploadImages);
+console.log("uploadImages : ", uploadImages);
 let imagePaths = []; // il va stocker toutes les images téléchargées
 
 // sur la requete '/s3url', on console.log la réponse du server à app.get('/s3url')
@@ -52,6 +52,9 @@ uploadImages.forEach((fileupload, index) => {
     // Cette liste n'a qu'un seul élément, sauf si 'multiple' est indiqué dans dans l'élément INPUT.
     const file = fileupload.files[0]; // 'file[0]' fait donc référence au 1er élément de 'filelist'
     //console.log("file: ", file);
+    //console.log(uploadImages);
+    //console.log(file);
+
     let imageUrl;
 
     if (file.type.includes("image")) {
@@ -63,11 +66,12 @@ uploadImages.forEach((fileupload, index) => {
           //console.log("url : ", url);
           fetch(url, {
             // On fait une nouvelle requete, mais cette fois à l'API AWS, avec l'url signée
-            // par AWS que nous à retournée le server
+            // par AWS que nous à retournée le server ce qui poste le fichier sur le sever AWS.
             method: "PUT",
             headers: new Headers({ "Content-Type": "multipart/form-data" }),
             body: file,
           }).then((res) => {
+            //console.log(res);
             // On récupère ce qui nous interresse dans l'adresse retounée par AWS dans la réponse.
             imageUrl = url.split("?")[0]; // On récupère la partie de l'adresse de l'mage sans les paramètres '?'.
             imagePaths[index] = imageUrl; // On la range dans le tableau 'imagePaths' à l'index corespondant à
@@ -152,6 +156,9 @@ const validateForm = () => {
 
 const productData = () => {
   // On rassembles les données
+  // part4 26mn49 : On ajoute un tagArr qui va contenir les tags pour le produit
+  let tagArr = tags.value.split(",");
+  tagArr.forEach((item, i) => (tagArr[i] = tagArr[i].trim())); // ça enlève les blanc en début et fin de chaque tag
   return (data = {
     name: productName.value,
     shortDes: shortLine.value,
@@ -162,7 +169,7 @@ const productData = () => {
     discount: discountPercentage.value,
     sellPrice: sellingPrice.value,
     stock: stock.value,
-    tags: tags.value,
+    tags: tagArr, // part4 27mn35 :On remplace 'tag.value' par le tableau.
     tac: tac.checked,
     email: user.email,
   });
@@ -256,7 +263,7 @@ const setFormsData = (data) => {
 
   // rechargement des tailles
   sizes = data.sizes;
-  console.log("sizes rechargées :", sizes); // retourne par exemple ['s','m','l']
+  //console.log("sizes rechargées :", sizes); // retourne par exemple ['s','m','l']
   let sizeCheckbox = document.querySelectorAll(".size-checkbox");
   sizeCheckbox.forEach((item) => {
     // On passe en revue chaque checkbox
@@ -271,8 +278,6 @@ const setFormsData = (data) => {
 
 // BBBBBBB On fait une requete au server pour récupérer les données du produit / draft en transmettant son id. Puis on envoie les données retournées par le server a setFormeData qui va recharger les données/images dans les champs.
 const fetchProductData = () => {
-  // delete the tempProduct from the session
-  delete sessionStorage.tempProduct;
   fetch("/get-products", {
     method: "post",
     headers: new Headers({ "Content-Type": "application/json" }),
@@ -300,10 +305,5 @@ if (location.pathname != "/add-product") {
   productId = decodeURI(location.pathname.split("/").pop()); // La méthode pop() supprime le dernier élément d'un tableau et retourne cet élément. Cette méthode modifie la longueur du tableau. decodeURI décode les symboles parfois présent dans les urls.
   //console.log(productId); // affiche l'Id
 
-  // On récupère les details du produit ou draft
-  let productDetail = JSON.parse(sessionStorage.tempProduct || null);
-  // On lance une fonction charger de récupérer les données sur le serveur
-  //if (productDetail == null) {
   fetchProductData();
-  //}
 }
