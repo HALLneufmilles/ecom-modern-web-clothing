@@ -78,7 +78,7 @@ const fetchProductData = () => {
     .then((data) => {
       setData(data);
       //console.log(data);
-      getProducts(data.tag[1]).then((data) => createProductSlider(data, ".container-for-card-slider", "similar products"));
+      getProducts(data.tags[1]).then((data) => createProductSlider(data, ".container-for-card-slider", "similar products"));
     })
     .catch((err) => {
       location.replace("/404");

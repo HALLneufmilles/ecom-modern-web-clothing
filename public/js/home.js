@@ -40,8 +40,8 @@ const createProductSlider = (data, parent, title) => {
   slideContainer.innerHTML += `
     <section class="product">
       <h2 class="product-category">${title}</h2>
-      <button class="pre-btn"><img src="img/arrow.png" alt="" /></button>
-      <button class="nxt-btn"><img src="img/arrow.png" alt="" /></button>
+      <button class="pre-btn"><img src="../img/arrow.png" alt="" /></button>
+      <button class="nxt-btn"><img src="../img/arrow.png" alt="" /></button>
       -- here goes the card --
     <!-- paert4 31mn30 : -->
       ${createProductCards(data)}
