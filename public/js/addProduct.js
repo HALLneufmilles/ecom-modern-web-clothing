@@ -175,7 +175,7 @@ const productData = () => {
   });
 };
 
-// ********** ENVOYER LE DONNEES DU NOUVEAU PRODUIT  ********************
+// ********** ENVOYER LES DONNEES DU NOUVEAU PRODUIT  ********************
 
 // Add product btn
 addProductBtn.addEventListener("click", () => {

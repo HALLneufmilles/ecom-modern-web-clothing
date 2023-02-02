@@ -282,6 +282,7 @@ app.post("/add-product", (req, res) => {
 
 // aller chercher les produit du seller pour les afficher dans la page seller.
 // part3 1h50mn40: On récupère Id envoyée par "fetchProductData()" de addProduct.js
+// part4 25mn : Ajout de 'tag'.
 app.post("/get-products", (req, res) => {
   // part4 : 25mn On ajout tag. Tag est un tableau de mot clef, qu'on va créer dans addProduct.js dans la la fonction productData(). Comme on a 3 cas à gérer(email, id, tag) on ne peut plus gérer avec une ternaire comme ci-dessous, alors on décompose en 3 conditions (if (id) else if(tag) else...)
   let { email, id, tag } = req.body;
@@ -329,6 +330,7 @@ app.post("/delete-product", (req, res) => {
 }); // part3 1h38mn00: On retourne terminer la requete dans createProduct.js
 
 // Gat product's page
+// part4 6mn50
 app.get("/products/:id", (req, res) => {
   res.sendFile(path.join(staticPath, "product.html"));
 });
