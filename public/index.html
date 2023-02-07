@@ -20,9 +20,11 @@
         <p class="sub-heading">best fashion collection of all time</p>
       </div>
     </header>
-
+    <!-- part4 39mn37 : On supprime le slides, pour les créer dynamiquement ( moi je les commente seulement ) 
+         On ajoute une section avec un id qui recevra le slider -->
     <!-- cards-container - ( slider 1) -->
-    <section class="product">
+    <section id="men-tshirt-products"></section>
+    <!-- <section class="product">
       <h2 class="product-category">best selling</h2>
       <button class="pre-btn"><img src="img/arrow.png" alt="" /></button>
       <button class="nxt-btn"><img src="img/arrow.png" alt="" /></button>
@@ -124,7 +126,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- collections - ( les 3 grandes images )-->
     <section class="collection-container">
@@ -148,8 +150,13 @@
       </a>
     </section>
 
+    <!-- part4 39mn37 : On supprime les 2 slides, pour les créer dynamiquement ( moi je les commente seulement ) 
+         On ajoute une section avec un id qui recevra les 2 sliders -->
+
+    <section id="men-tshirt-products-2"></section>
+
     <!-- card-container - (slider 2) -->
-    <section class="product">
+    <!-- <section class="product">
       <h2 class="product-category">Shirts</h2>
       <button class="pre-btn"><img src="img/arrow.png" alt="" /></button>
       <button class="nxt-btn"><img src="img/arrow.png" alt="" /></button>
@@ -251,10 +258,10 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- card-container  - (slider 3)-->
-    <section class="product">
+    <!-- <section class="product">
       <h2 class="product-category">Shoes</h2>
       <button class="pre-btn"><img src="img/arrow.png" alt="" /></button>
       <button class="nxt-btn"><img src="img/arrow.png" alt="" /></button>
@@ -356,12 +363,17 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <footer></footer>
 
     <script src="js/nav.js"></script>
     <script src="js/footer.js"></script>
     <script src="js/home.js"></script>
+
+    <script>
+      getProducts("Men Tshirt").then((data) => createProductSlider(data, "#men-tshirt-products", "Men T-shirt"));
+      getProducts("Men Tshirt").then((data) => createProductSlider(data, "#men-tshirt-products-2", "Men T-shirt"));
+    </script>
   </body>
 </html>

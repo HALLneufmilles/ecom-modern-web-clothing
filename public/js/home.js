@@ -81,6 +81,33 @@ const createProductCards = (data, parent) => {
     `;
     }
   }
-
+  // part4 47mn23 : Dans le cadre de search.html on utilise que les cards, pas le slider, donc il faut dire à createProductCards() dans quel parent mettre les cartes.
+  if (parent) {
+    let cardContainer = document.querySelector(parent);
+    cardContainer.innerHTML = start + middle + end;
+  }
   return start + middle + end;
+};
+
+// part4 48mn20 : on crée cette fonction puis on ajoute la vaiable size à product.js.
+
+const add_product_to_cart_or_wishlist = (type, data) => {
+  let data = JSON.parse(localStorage.getItem(type));
+  if (data == null) {
+    data = [];
+  }
+
+  product = {
+    item: 1,
+    name: product.name,
+    sellPrice: product.sellPrice,
+    size: size || null,
+    shortDes: product.shortDes,
+    image: product.images[0],
+  };
+
+  data.push(product);
+  //console.log(data);
+  localStorage.setItem(type, JSON.stringify(data));
+  return "added";
 };

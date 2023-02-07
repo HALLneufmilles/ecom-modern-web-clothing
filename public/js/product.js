@@ -17,11 +17,15 @@ productImages.forEach((item, i) => {
 const sizeBtns = document.querySelectorAll(".size-radio-btn");
 let checkedBtn = 0;
 
+// part4 50mn00 : let size; puis on va ligne 87, whishlistBtn.
+let size;
+
 sizeBtns.forEach((item, i) => {
   item.addEventListener("click", () => {
     sizeBtns[checkedBtn].classList.remove("check");
     item.classList.add("check");
     checkedBtn = i;
+    size = item.innerHTML; // part4 50mn05 :
   });
 });
 
@@ -78,6 +82,17 @@ const setData = (data) => {
   sellPrice.innerHTML = `${data.sellPrice} E`;
   actualPrice.innerHTML = `${data.actualPrice} E`;
   discount.innerHTML = `${data.discount}%`;
+
+  // part4 51mn24 : wishlist and cart btn
+  const wishlistBtn = document.querySelector(".wishlist-btn");
+  wishlistBtn.addEventListener("click", () => {
+    wishlistBtn.innerHTML = add_product_to_cart_or_wishlist("wishlist", data);
+  });
+
+  const cartBtn = document.querySelector(".cart-btn");
+  cartBtn.addEventListener("click", () => {
+    cartBtn.innerHTML = add_product_to_cart_or_wishlist("cart", data);
+  });
 };
 
 // BBBB Attention cette fetchProductData n'est pas la même que celle du fichier addProduct.js.
@@ -96,7 +111,7 @@ const fetchProductData = () => {
       setData(data);
       //console.log(data.tags);
       //console.log(data.tags[1]);
-      // part4 35mn25 : On sélectionne le tag d'index 1 du tableau data.tags, que l'on transmet à getProducts() située dans home.js et qui va transmette le tag a la route POST "/get-products"
+      // part4 35mn25 : On sélectionne le tag d'index 1 (pourquoi 1 ??????) du tableau data.tags, que l'on transmet à getProducts() située dans home.js et qui va transmette le tag a la route POST "/get-products"
       // qui va rassembler tous les produits possédant ce tag et nous les retourner.
       // Ils seront ensuite passés à createProductSlider() pour construire les cartes.
       // ici '.container-for-card-slider' représente la classe de la div 'parent' devant accueillir le slider et "similar products" le titre du slider.

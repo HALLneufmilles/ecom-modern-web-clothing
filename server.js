@@ -335,6 +335,11 @@ app.get("/products/:id", (req, res) => {
   res.sendFile(path.join(staticPath, "product.html"));
 });
 
+// part4 42mn37 : route de la page 'search.html'
+app.get("/search/:key", (req, res) => {
+  res.sendFile(path.join(staticPath, "search.html"));
+});
+
 // 404 route:
 // pour toutes les root commençant par "/404" Exemple: "/404/azeaze/aze" ....
 app.get("/404", (req, res) => {
